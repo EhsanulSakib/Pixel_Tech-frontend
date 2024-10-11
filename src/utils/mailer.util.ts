@@ -1,24 +1,37 @@
 import User from "@/models/userModel";
 import nodemailer from "nodemailer";
 import bcryptjs from 'bcryptjs'
-import SMTPConnection from "nodemailer/lib/smtp-connection";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export const sendEmail = async ({ email, emailType, userId }: any) => {
   try {
     const hashedToken = await bcryptjs.hash(userId.toString(), 10)
+    console.log(email)
+    console.log(emailType)
+    console.log(typeof (emailType))
+    console.log(userId)
 
 
     if (emailType === 'VERIFY') {
-      await User.findByIdAndUpdate(userId, { verifyToken: hashedToken, verifyTokenExpire: Date.now() + 3600000 })
+      const updatedUser = await User.findByIdAndUpdate(userId, {
+        $set: {
+          verifyToken: hashedToken,
+          verifyTokenExpire: new Date(Date.now() + 3600000)
+        }
+      })
     }
 
     else if (emailType === 'RESET') {
-      await User.findByIdAndUpdate(userId, { forgotPasswordToken: hashedToken, forgotPasswordExpire: Date.now() + 3600000 })
+      await User.findByIdAndUpdate(userId, {
+        $set: {
+          forgotPasswordToken: hashedToken,
+          forgotPasswordExpire: new Date(Date.now() + 3600000)
+        }
+      })
     }
 
     // Looking to send emails in production? Check out our Email API/SMTP product!
-    const transport = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
       auth: {
@@ -27,8 +40,16 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
       }
     } as SMTPTransport.Options);
 
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: process.env.APP_EMAIL,
+    //     pass: process.env.APP_PASSWORD
+    //   }
+    // });
+
     const mailOptions = {
-      from: 'ehsanulsakib.professional@gmail.com', // sender address
+      from: process.env.APP_EMAIL, // sender address
       to: email,
       subject: emailType === 'VERIFY' ? 'Verify your email' : 'Reset Password',
       html: `<p>Click <a href="${process.env.CLIENT_URL}/${emailType === 'VERIFY' ? 'verifyEmail' : 'resetEmail'}?token=${hashedToken}">here</a> to ${emailType === 'VERIFY' ? 'verify your email' : 'reset your password'} or copy and paste this link in your browser.<br>
@@ -36,7 +57,13 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
       </p>`
     };
 
-    const mailResponse = await transport.sendMail(mailOptions)
+    const mailResponse = await transporter.sendMail(mailOptions, function (err: any, info: any) {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log('Email sent: ' + info.response)
+      }
+    })
 
     return mailResponse
   }

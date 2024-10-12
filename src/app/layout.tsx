@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Poppins } from '@next/font/google';
 import "./globals.css";
+import ReduxProvider from "@/providers/ReduxProvider";
+import Navbar from "@/components/Navbar/Navbar";
+import NextUIProviderWrapper from "@/providers/NextUIProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const poppins = Poppins({
+  weight: ['400', '600', '700'], // Select the weights you need
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
@@ -24,11 +21,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="light">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`bg-slate-50 text-gray-800 dark:bg-gray-800 dark:text-slate-50 poppins.className`}
       >
-        {children}
+        <NextUIProviderWrapper>
+          <div className="min-h-screen w-full xl:max-w-[2048px] px-[2%] lg:px-[3%]">
+            <Navbar />
+            <ReduxProvider>
+              {children}
+            </ReduxProvider>
+          </div>
+        </NextUIProviderWrapper>
       </body>
     </html>
   );

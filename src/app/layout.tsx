@@ -26,8 +26,8 @@ export default function RootLayout({
         className={`bg-slate-50 text-gray-800 dark:bg-gray-800 dark:text-slate-50 poppins.className`}
       >
         <NextUIProviderWrapper>
-          <div className="min-h-screen w-full xl:max-w-[2048px] px-[2%] lg:px-[3%]">
-            <Navbar />
+          <Navbar />
+          <div className="mt-[56px] min-h-screen w-full xl:max-w-[2048px] px-[1%] py-4 lg:px-[2.5%] mx-auto">
             <ReduxProvider>
               {children}
             </ReduxProvider>

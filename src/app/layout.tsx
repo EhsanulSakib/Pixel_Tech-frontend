@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
 import Navbar from "@/components/Navbar/Navbar";
 import NextUIProviderWrapper from "@/providers/NextUIProvider";
+import Footer from "@/components/Footer/Footer";
 
 const poppins = Poppins({
   weight: ['400', '600', '700'], // Select the weights you need
@@ -32,6 +33,7 @@ export default function RootLayout({
               {children}
             </ReduxProvider>
           </div>
+          <Footer />
         </NextUIProviderWrapper>
       </body>
     </html>

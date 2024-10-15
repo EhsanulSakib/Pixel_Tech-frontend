@@ -61,7 +61,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className={`fixed w-full shadow-md top-0 ${theme == 'light' ? 'bg-slate-50' : 'bg-slate-800'}`}>
+    <div className={`z-50 fixed w-full shadow-md top-0 bg-slate-50 text-slate-800 dark:bg-slate-800 dark:text-slate-50`}>
       <div className={`max-w-[2048px] mx-auto py-2 px-[1%] lg:px-[2.5%] flex justify-between items-center`}>
         <div className='flex gap-1 items-center justify-center'>
           <button className='text-3xl lg:hidden' onClick={() => setOpen(!open)}>{open ? <RxCross2 /> : <IoReorderThreeOutline />}</button>

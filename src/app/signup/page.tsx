@@ -23,14 +23,16 @@ const SignUpPage = () => {
   const onSignUp = async () => {
     try {
       setLoading(true)
-
       const res = await axios.post('/api/users/signup', user)
       console.log("SignUp successful", res.data)
+      toast.success("Signup successful")
       router.push('/login')
       setLoading(false)
     }
-    catch (error) {
-      toast.error("Signup failed")
+    catch (error: any) {
+      const errorMessage = error.response.data?.error || "Signup failed"
+      toast.error(errorMessage)
+      setLoading(false)
       console.log(error)
     }
   }
@@ -46,14 +48,14 @@ const SignUpPage = () => {
 
   return (
     <div className='min-h-screen flex items-center justify-center px-[1%] lg:px-[2.5%] '>
-      <div className={`shadow-xl flex flex-col md:flex-row items-center justify-between p-2 md:p-4 w-full md:w-3/4 mx-auto rounded-md md:gap-12`}>
+      <div className={`shadow-xl flex flex-col md:flex-row items-center justify-between p-2 md:p-4 w-full md:w-3/4 xl:w-3/5 mx-auto rounded-md md:gap-12`}>
         <div>
           <Lottie animationData={signup} className="h-[18rem] md:h-[20rem]" />
         </div>
-        <div className='w-3/5 flex flex-col items-center gap-4'>
+        <div className='w-4/5 md:w-3/5 flex flex-col items-center gap-4'>
           <h2 className='text-blue-500 text-2xl lg:text-3xl font-bold'>Sign Up</h2>
 
-          <div className='flex flex-col gap-4 w-full'>
+          <div className='flex flex-col gap-4 w-full xl:w-3/4'>
             <Input
               type='text'
               required={true}
@@ -88,10 +90,11 @@ const SignUpPage = () => {
 
           <Button
             isDisabled={btnDisabled}
+            isLoading={loading}
             onClick={onSignUp}
             size="lg"
             color={btnDisabled ? 'default' : 'primary'}
-            className="w-full shadow-lg text-base lg:text-md"
+            className="w-full shadow-lg text-base lg:text-md xl:w-3/4"
           >
             Sign Up
           </Button>

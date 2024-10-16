@@ -5,6 +5,7 @@ import ReduxProvider from "@/providers/ReduxProvider";
 import Navbar from "@/components/Navbar/Navbar";
 import NextUIProviderWrapper from "@/providers/NextUIProvider";
 import Footer from "@/components/Footer/Footer";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   weight: ['400', '600', '700'], // Select the weights you need
@@ -34,6 +35,9 @@ export default function RootLayout({
             </ReduxProvider>
           </div>
           <Footer />
+          <Toaster
+            position="top-right"
+            reverseOrder={false} />
         </NextUIProviderWrapper>
       </body>
     </html>

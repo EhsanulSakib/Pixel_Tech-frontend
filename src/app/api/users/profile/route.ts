@@ -5,7 +5,7 @@ import { getUserData } from "@/utils/getUserData";
 
 connect()
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const userId = await getUserData(request)
   const user = await User.findOne({ _id: userId }).select('-password')
 

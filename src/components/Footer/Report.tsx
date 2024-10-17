@@ -66,7 +66,7 @@ const Report = () => {
           />
         </div>
 
-        <Button size="md" variant='bordered' className='bg-default-200 text-blue-500 text-lg font-bold cursor-pointer' radius='full' disabled={!formData.name || !formData.email || !formData.message} type="submit">Send</Button>
+        <Button size="md" className='bg-slate-100 hover:bg-slate-50 duration-300 text-blue-500 text-lg font-bold cursor-pointer' radius='full' disabled={!formData.name || !formData.email || !formData.message} type="submit">Send</Button>
       </form>
 
     </div>

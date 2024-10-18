@@ -27,18 +27,18 @@ export default function RootLayout({
       <body
         className={`bg-slate-50 text-gray-800 dark:bg-gray-800 dark:text-slate-50 poppins.className`}
       >
-        <NextUIProviderWrapper>
-          <Navbar />
-          <div className="mt-[56px] min-h-screen w-full xl:max-w-[2048px] px-[1%] py-4 lg:px-[2.5%] mx-auto">
-            <ReduxProvider>
+        <ReduxProvider>
+          <NextUIProviderWrapper>
+            <Navbar />
+            <div className="mt-[56px] min-h-screen w-full xl:max-w-[2048px] px-[1%] py-4 lg:px-[2.5%] mx-auto">
               {children}
-            </ReduxProvider>
-          </div>
-          <Footer />
-          <Toaster
-            position="top-right"
-            reverseOrder={false} />
-        </NextUIProviderWrapper>
+            </div>
+            <Footer />
+            <Toaster
+              position="top-right"
+              reverseOrder={false} />
+          </NextUIProviderWrapper>
+        </ReduxProvider>
       </body>
     </html>
   );

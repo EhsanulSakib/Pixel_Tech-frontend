@@ -6,13 +6,19 @@ import { IoSunnySharp, IoReorderThreeOutline } from "react-icons/io5";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { usePathname } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import Image from 'next/image';
 const Navbar = () => {
   //useStates
   const [theme, setTheme] = useState<string>('light');
   const [open, setOpen] = useState<boolean>(false);
-
+  const [profileOpen, setProfileOpen] = useState<boolean>(false);
   //router
   const pathname = usePathname();
+
+  //redux
+  const loggedInUser = useSelector((state: any) => state.user.loggedInUser);
+
 
   const navLinks =
     [
@@ -80,7 +86,7 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <div className='flex gap-2'>
+        <div className='relative flex gap-2'>
           <button
             id="theme-toggle"
             className="text-xl"
@@ -89,7 +95,28 @@ const Navbar = () => {
             {theme === 'light' ? <BsMoonStarsFill /> : <IoSunnySharp />}
           </button>
 
-          <Link href={'/login'}><Button size="md" radius='full' color='primary' className='text-md font-bold'>Login</Button></Link>
+          {
+            loggedInUser ?
+              <img
+                src={loggedInUser?.profilePicture}
+                alt="profile"
+                className="w-10 h-10 rounded-full cursor-pointer"
+                onClick={() => setProfileOpen(!profileOpen)}
+              />
+              :
+              <Link href='/login'>
+                <button className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'>Login</button>
+              </Link>
+          }
+
+          <div className={`absolute duration-300 bg-white dark:bg-slate-800 dark:text-white shadow-md rounded-lg px-2 py-4 right-0 min-w-24 flex flex-col items-center gap-1 font-bold ${profileOpen ? 'top-11' : '-top-60'}`}>
+
+            <Link href='/profile'>
+              <p className='cursor-pointer hover:text-blue-500'>Profile</p>
+            </Link>
+
+            <button className='cursor-pointer hover:text-red-500' onClick={() => localStorage.clear()}>Logout</button>
+          </div>
         </div>
       </div>
     </div>

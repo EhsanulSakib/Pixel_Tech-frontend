@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
@@ -8,42 +8,56 @@ import Lottie from 'lottie-react';
 import login from "@/assets/login.json";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoggedInUser } from '@/redux/slices/userSlice';
 
 const LoginPage = () => {
   const [user, setUser] = useState({
     email: '',
     password: '',
-  })
-  const [btnDisabled, setBtnDisabled] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const router = useRouter()
+  });
+  const [btnDisabled, setBtnDisabled] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+  const userRedux = useSelector((state: any) => state.user.loggedInUser);
 
   const onLogIn = async () => {
     try {
-      setLoading(true)
-      const res = await axios.post('/api/users/login', user)
-      console.log("SignUp successful", res.data)
-      toast.success("Signup successful")
-      router.push('/')
-      setLoading(false)
+      setLoading(true);
+      const res = await axios.post('/api/users/login', user);
+
+      if (res.data && res.data.user) {
+        console.log("API response user:", res.data.user);
+        dispatch(setLoggedInUser(res.data.user)); // Dispatch user to Redux
+
+        toast.success("Login successful");
+        // Push to home page after successful login
+        router.push('/');
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || "Login failed";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
-    catch (error: any) {
-      const errorMessage = error.response.data?.error || "Signup failed"
-      toast.error(errorMessage)
-      setLoading(false)
-      console.log(error)
-    }
-  }
+  };
 
   useEffect(() => {
     if (user.email.length > 0 && user.password.length > 0) {
-      setBtnDisabled(false)
+      setBtnDisabled(false);
+    } else {
+      setBtnDisabled(true);
     }
-    else {
-      setBtnDisabled(true)
+  }, [user]);
+
+  useEffect(() => {
+    if (userRedux) {
+      console.log("Logged in Redux state:", userRedux);
     }
-  }, [user])
+  }, [userRedux]);
 
   return (
     <div className='min-h-screen flex items-center justify-center px-[1%] lg:px-[2.5%] '>
@@ -60,7 +74,8 @@ const LoginPage = () => {
               required={true}
               size="md"
               label="Email"
-              onChange={(e) => setUser({ ...user, email: e.target.value })} />
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
+            />
 
             <div className='relative flex items-center'>
               <Input
@@ -78,7 +93,6 @@ const LoginPage = () => {
                   <FaEye className='text-xl absolute right-3 cursor-pointer' onClick={() => setShowPassword(!showPassword)} />
               }
             </div>
-
           </div>
 
           <Button
@@ -92,7 +106,7 @@ const LoginPage = () => {
             Login
           </Button>
 
-          <h2>Don't have any account? <Link href="/signup" className='text-blue-500 cursor-pointer font-bold'>Sign Up</Link></h2>
+          <h2>Don't have an account? <Link href="/signup" className='text-blue-500 cursor-pointer font-bold'>Sign Up</Link></h2>
         </div>
       </div>
     </div>

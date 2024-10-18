@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/redux/store.js", "src/features/themeSlice.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/redux/store.js", "src/features/themeSlice.js", "src/redux/slices/userSlice.js"],
   "exclude": ["node_modules"]
 }
